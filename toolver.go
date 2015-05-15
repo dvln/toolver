@@ -16,8 +16,13 @@
 package toolver
 
 import (
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/kardianos/osext"
 )
 
 // Version provides utility methods for comparing tool versions
@@ -76,3 +81,23 @@ func (v Version) GreaterThanOrEqualTo(other Version) bool {
 func (v Version) Equal(other Version) bool {
 	return v.compareTo(other) == 0
 }
+
+// BuildDate checks the ModTime of the dvln executable and returns it as a
+// formatted string.  This assumes that the executable name is "dvln", if it does
+// not exist, an empty string will be returned.
+// Note: osext is used for cross-platform functionality.
+func BuildDate() (string, error) {
+	fname, _ := osext.Executable()
+	dir, err := filepath.Abs(filepath.Dir(fname))
+	if err != nil {
+		return "", err
+	}
+	fi, err := os.Lstat(filepath.Join(dir, filepath.Base(fname)))
+	if err != nil {
+		return "", err
+	}
+	t := fi.ModTime()
+	buildDate := t.Format(time.RFC3339)
+	return buildDate, nil
+}
+
