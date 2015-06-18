@@ -1,4 +1,5 @@
 // Copyright © 2015 Erik Brady <brady@dvln.org> and Docker Inc
+// Note: This is based on an open Docker package, thanks Docker!
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kardianos/osext"
+	"github.com/dvln/osext"
 )
 
 // Version provides utility methods for comparing tool versions
@@ -82,22 +83,22 @@ func (v Version) Equal(other Version) bool {
 	return v.compareTo(other) == 0
 }
 
-// BuildDate checks the ModTime of the dvln executable and returns it as a
-// formatted string.  This assumes that the executable name is "dvln", if it does
-// not exist, an empty string will be returned.
+// ExecutableInfo checks the ModTime of the executable and return a string
+// for the date/time of the file and it also returns the executable name
+// itself in case needed, err is the 3rd return (if error "" returned for
+// the build date and executable name).
 // Note: osext is used for cross-platform functionality.
-func BuildDate() (string, error) {
+func ExecutableInfo() (string, string, error) {
 	fname, _ := osext.Executable()
 	dir, err := filepath.Abs(filepath.Dir(fname))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	fi, err := os.Lstat(filepath.Join(dir, filepath.Base(fname)))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	t := fi.ModTime()
 	buildDate := t.Format(time.RFC3339)
-	return buildDate, nil
+	return fname, buildDate, nil
 }
-
