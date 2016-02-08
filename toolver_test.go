@@ -36,5 +36,19 @@ func TestCompareVersion(t *testing.T) {
 	assertVersion(t, "1.1", "1.1.1", -1)
 	assertVersion(t, "1.1.1", "1.1.2", -1)
 	assertVersion(t, "1.1.2", "1.2", -1)
-
 }
+
+// Very simple test to see if we get executable info back as expected
+func TestExecutableInfo(t *testing.T) {
+	name, buildDate, err := ExecutableInfo()
+	if name == "" {
+		t.Fatal("ExecutableInfo() returned empty tool name, that's not good")
+	}
+	if buildDate == "" {
+		t.Fatal("ExecutableInfo() returned empty build date, that's not good")
+	}
+	if err != nil {
+		t.Fatalf("ExecutableInfo() returned an error and shouldn't have, err:%s\n", err)
+	}
+}
+
