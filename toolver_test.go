@@ -1,4 +1,4 @@
-// Copyright © 2015 Erik Brady <brady@dvln.org> and Docker Inc
+// Copyright © 2015-2016 Erik Brady <brady@dvln.org> and Docker Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,4 +51,3 @@ func TestExecutableInfo(t *testing.T) {
 		t.Fatalf("ExecutableInfo() returned an error and shouldn't have, err:%s\n", err)
 	}
 }
-
